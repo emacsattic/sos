@@ -31,6 +31,21 @@
 
 (provide 'sos)
 
+(defun sos-decode-html-entities ()
+  "Decodes HTML entities in a buffer."
+  (loop for entity in '(("&quot;" . "\"")
+                        ("&apos;" . "'")
+                        ("&#39;" . "'")
+                        ("&hellip" . "...")
+                        ("&amp;" . "&")
+                        ("&gt;" . ">")
+                        ("&lt;" . "<")
+                        ("&#194;" . "Â")
+                        ("&#178;" . "²"))
+        do (goto-char (point-min))
+        (while (search-forward (car entity) nil t)
+          (replace-match (cdr entity) nil t))))
+
 (defun sos-uncompress-callback (&optional status)
   "Callback for url-retrieve that decompresses gzipped content in
 the HTTP response. Code taken from
@@ -88,6 +103,15 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
                                      (cdr (assoc 'tags item))))
                      (cdr (assoc 'excerpt item))
                      "\n\n"))
+
+    (sos-decode-html-entities)
+    ;; strip out HTML tags
+    (goto-char (point-min))
+    (while (search-forward "<span class=\"highlight\">" nil t)
+      (replace-match "" nil t))
+    (goto-char (point-min))
+    (while (search-forward "</span>" nil t)
+      (replace-match "" nil t))
 
     (goto-char (point-min))
     (org-global-cycle 1)))
