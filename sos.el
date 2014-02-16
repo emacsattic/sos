@@ -71,11 +71,24 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
                           "&site=stackoverflow"))
          (response-buffer (url-retrieve-synchronously api-url))
          (json-response (sos-get-response-body response-buffer)))
+    ;; set up the buffer
     (switch-to-buffer (concat "*sos - " query "*"))
+    (erase-buffer)
     (org-mode)
+    (visual-line-mode t)
+    (insert "#+TITLE: StackOverflow Search: " query "\n")
+
+    ;; display the search results
     (loop for item across (cdr (assoc 'items json-response))
-          do (insert "* " (cdr (assoc 'title item)) "\n"
-                     (cdr (assoc 'excerpt item)) "\n\n"))
+          do (insert (format "* %s: %s [[http://stackoverflow.com/q/%d][link]] :@%s:\n"
+                             (upcase (subseq (cdr (assoc 'item_type item)) 0 1))
+                             (cdr (assoc 'title item))
+                             (cdr (assoc 'question_id item))
+                             (reduce (lambda (x y) (format "%s:@%s" x y))
+                                     (cdr (assoc 'tags item))))
+                     (cdr (assoc 'excerpt item))
+                     "\n\n"))
+
     (goto-char (point-min))
     (org-global-cycle 1)))
 
