@@ -1,4 +1,4 @@
-;;; sos.el --- Emacs-SOS, StackOverflow Search for Emacs
+;;; sos.el --- StackOverflow Search
 
 ;; Copyright (C) 2014 Rudolf Olah <omouse@gmail.com>
 
@@ -8,6 +8,7 @@
 ;; Created: 2012-02-15
 ;; By: Rudolf Olah
 ;; keywords: tools, search, questions
+;; Package-Requires: ((org "7"))
 
 ;; Emacs-SOS is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -75,10 +76,12 @@ https://github.com/omouse/fogbugz-mode"
     (kill-buffer uncompressed-buffer)
     json-response))
 
-(defun sos-search (query)
+;;;###autoload
+(defun sos (query)
   "Searches StackOverflow for the given `query'. Displays excerpts from the search results.
 
 API Reference: http://api.stackexchange.com/docs/excerpt-search"
+  (interactive "sSearch StackOverflow: ")
   (let* ((api-url (concat "http://api.stackexchange.com/2.2/search/excerpts"
                           "?order=desc"
                           "&sort=activity"
@@ -116,6 +119,6 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
     (goto-char (point-min))
     (org-global-cycle 1)))
 
-(defun sos (query)
-  (interactive "sSearch StackOverflow: ")
-  (sos-search query))
+(provide 'sos)
+
+;;; sos.el ends here
