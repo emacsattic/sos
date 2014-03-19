@@ -76,6 +76,18 @@ https://github.com/omouse/fogbugz-mode"
     (kill-buffer uncompressed-buffer)
     json-response))
 
+(defun sos-insert-search-result (item)
+  "Inserts the contents of StackOverflow JSON object, `item',
+into the current buffer."
+  (insert (format "* %s: %s [[http://stackoverflow.com/q/%d][link]] :@%s:\n"
+                  (upcase (subseq (cdr (assoc 'item_type item)) 0 1))
+                  (cdr (assoc 'title item))
+                  (cdr (assoc 'question_id item))
+                  (reduce (lambda (x y) (format "%s:@%s" x y))
+                          (cdr (assoc 'tags item))))
+          (cdr (assoc 'excerpt item))
+          "\n\n"))
+
 ;;;###autoload
 (defun sos (query)
   "Searches StackOverflow for the given `query'. Displays excerpts from the search results.
@@ -98,14 +110,7 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
 
     ;; display the search results
     (loop for item across (cdr (assoc 'items json-response))
-          do (insert (format "* %s: %s [[http://stackoverflow.com/q/%d][link]] :@%s:\n"
-                             (upcase (subseq (cdr (assoc 'item_type item)) 0 1))
-                             (cdr (assoc 'title item))
-                             (cdr (assoc 'question_id item))
-                             (reduce (lambda (x y) (format "%s:@%s" x y))
-                                     (cdr (assoc 'tags item))))
-                     (cdr (assoc 'excerpt item))
-                     "\n\n"))
+          do (sos-insert-search-result item))
 
     (sos-decode-html-entities)
     ;; strip out HTML tags
