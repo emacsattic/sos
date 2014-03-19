@@ -5,7 +5,7 @@
 ;; Author: Rudolf Olah
 ;; URL: https://github.com/omouse/emacs-sos
 ;; Version: 0.1
-;; Created: 2012-02-15
+;; Created: 2014-02-15
 ;; By: Rudolf Olah
 ;; keywords: tools, search, questions
 ;; Package-Requires: ((org "7"))
