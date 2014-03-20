@@ -88,7 +88,9 @@ into the current buffer."
                               (cdr (assoc 'tags item))) "\n"
           ":END:\n"
           (cdr (assoc 'excerpt item))
-          "\n\n"))
+          "\n\n** (Read more)\n"
+          (cdr (assoc 'body item))
+          "\n"))
 
 ;;;###autoload
 (defun sos (query)
