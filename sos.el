@@ -56,7 +56,9 @@ Modified for use with url-retrieve-synchronously by making the
 `status' argument optional.
 
 Returns the buffer of the uncompressed gzipped content."
-  (let ((filename (make-temp-file "download" nil ".gz")))
+  (let ((filename (make-temp-file "download" nil ".gz"))
+        (coding-system-for-read  'binary)
+        (coding-system-for-write 'binary))
     (search-forward "\n\n") ; Skip response headers.
     (write-region (point) (point-max) filename)
     (with-auto-compression-mode
