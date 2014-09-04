@@ -100,7 +100,7 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
   (interactive "sSearch StackOverflow: ")
   (let* ((api-url (concat "http://api.stackexchange.com/2.2/search/excerpts"
                           "?order=desc"
-                          "&sort=activity"
+                          "&sort=relevance"
                           "&q=" (url-hexify-string query)
                           "&site=stackoverflow"))
          (response-buffer (url-retrieve-synchronously api-url))
