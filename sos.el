@@ -32,6 +32,10 @@
 
 (provide 'sos)
 
+(defvar sos-get-answers 'nil
+  "If non-nil retrieve and SO's answers to SO's questions when building the search result buffer.
+This will slow down the process.")
+
 (defun sos-decode-html-entities ()
   "Decodes HTML entities in a buffer."
   (loop for entity in '(("&quot;" . "\"")
@@ -81,18 +85,25 @@ https://github.com/omouse/fogbugz-mode"
 (defun sos-insert-search-result (item)
   "Inserts the contents of StackOverflow JSON object, `item',
 into the current buffer."
-  (insert (format "* %s: %s [[http://stackoverflow.com/q/%d][link]]\n"
-                  (upcase (subseq (cdr (assoc 'item_type item)) 0 1))
-                  (cdr (assoc 'title item))
-                  (cdr (assoc 'question_id item)))
-          ":PROPERTIES:\n"
-          ":SO_TAGS: " (reduce (lambda (x y) (format "%s %s" x y))
-                              (cdr (assoc 'tags item))) "\n"
-          ":END:\n"
-          (cdr (assoc 'excerpt item))
-          "\n\n** (Read more)\n"
-          (cdr (assoc 'body item))
-          "\n"))
+  (let ((id (cdr (assoc 'question_id item))))
+    (insert (format "* %s: %s [[http://stackoverflow.com/q/%d][link]]\n"
+		    (upcase (subseq (cdr (assoc 'item_type item)) 0 1))
+		    (cdr (assoc 'title item))
+		    (cdr (assoc 'question_id item)))
+	    ":PROPERTIES:\n"
+	    ":ID: " (int-to-string id) "\n"
+	    ":SO_TAGS: "
+	    (reduce
+	     (lambda (x y) (format "%s %s" x y))
+	     (cdr (assoc 'tags item))) "\n"
+	     ":END:\n"
+	     (cdr (assoc 'excerpt item))
+	     "\n\n** (Read more)\n"
+	     (cdr (assoc 'body item))
+	     (if (not sos-get-answers) ""
+	       (sos-get-answers id))
+	     "\n")))
+
 
 ;;;###autoload
 (defun sos (query)
@@ -128,7 +139,68 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
       (replace-match "" nil t))
 
     (goto-char (point-min))
-    (org-global-cycle 1)))
+    (org-global-cycle 1)
+    (sos-mode-on)))
+
+
+(defun sos-get-answers (id)
+  "Get answers for SO's question defined by ID."
+  (let* ((api-url (concat "http://api.stackexchange.com/2.2/"
+			  "questions/"
+			  (if (stringp id) id
+			    (int-to-string id))
+			  "/answers"
+			  "?order=desc"
+			  "&sort=activity"
+			  "&filter=withbody"
+			  "&site=stackoverflow"))
+	 (response-buffer (url-retrieve-synchronously api-url))
+	 (json-response (progn
+			  (switch-to-buffer response-buffer)
+			  (goto-char (point-min))
+			  (sos-get-response-body response-buffer)))
+	 (answer-list (cdr (assoc 'items json-response)))
+	 (n-answers (length answer-list))
+	 (i 0)
+	 (sos-string
+	  (concat "\n\n** Answers [" (int-to-string n-answers) "]\n")))
+    (while (< i n-answers) 
+      (setq sos-string
+	    (concat sos-string
+		    (concat "\n\n*** Answer no. " (int-to-string (1+ i)) 
+			    "\n"
+			    (cdr (assoc 'body (elt answer-list i)))
+			    "\n"))
+	    i (1+ i)))
+    sos-string))
+
+;;;###autoload
+(defun sos-answer ()
+  "Get answers for SO question ID as defined in property block of the current question."
+  (interactive)
+  (let ((id (org-entry-get (point) "ID" t)))
+    (if (not id)
+	(message "Cannot see question ID at point.")
+      (org-narrow-to-subtree)
+      (goto-char (point-max))
+      (insert (sos-get-answers id))
+      (widen)
+      (org-back-to-heading))))
+
+(defvar sos-mode-map (make-sparse-keymap) "Keymap used for sos-mode commands.")
+(define-key sos-mode-map "A" 'sos-answer)
+
+(define-minor-mode sos-mode "Toggle sos-mode.
+With argument ARG turn sos-mode on if ARG is positive, otherwise turn it
+off."
+  :lighter " *SOS*"
+  :group 'org
+  :keymap 'sos-mode-map)
+
+(defun sos-mode-on () (interactive)
+  (message "Press A to retrieve SO's answers for the question id at point.")
+  (sos-mode t))
+
 
 (provide 'sos)
 
