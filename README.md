@@ -20,6 +20,10 @@ In the search results buffer, if you have a question at point, you can use `sos-
 
 ![emacs sos search results screenshot](https://github.com/omouse/emacs-sos/raw/master/emacs-sos-screenshot.png)
 
+## Alternatives to sos-mode
+
+There's an alternative to sos-mode floating out there: [sx.el](https://github.com/vermiculus/sx.el/) which uses the Stack Exchange API and works with more than just StackOverflow.
+
 ## Copyright and License
 
 Licensed under the GNU GPL v3, see [LICENSE](./LICENSE) for full text of license.
