@@ -2,6 +2,17 @@
 
 StackOverflow Search (SOS) mode for Emacs.
 
+## Installation
+
+### Install using MELPA
+
+    M-x package-install RET sos
+
+### Install using Github
+
+    git clone https://github.com/omouse/emacs-sos.git
+    M-x load-file RET "/path/to/clone/sos.el"
+
 ## Usage
 
 Invoked with the `sos` command
