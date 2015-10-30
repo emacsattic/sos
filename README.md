@@ -8,6 +8,8 @@ StackOverflow Search (SOS) mode for Emacs.
 
     M-x package-install RET sos
 
+[![MELPA](http://melpa.org/packages/sos-badge.svg)](http://melpa.org/#/sos)
+
 ### Install using Github
 
     git clone https://github.com/omouse/emacs-sos.git
