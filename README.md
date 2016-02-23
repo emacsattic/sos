@@ -39,8 +39,10 @@ In the search results buffer, if you have a question at point, you can use `sos-
 
 There's an alternative to sos-mode floating out there: [sx.el](https://github.com/vermiculus/sx.el/) which uses the Stack Exchange API and works with more than just StackOverflow.
 
+Someone has created a command-line tool for viewing StackOverflow questions: [how2](https://github.com/santinic/how2). It's written in Node.js which is okay but what a strange choice for a command-line tool. It also has modal windows within the terminal which is strange. It includes a [StackExchange API for Node.js](https://github.com/santinic/how2/tree/master/lib/stackexchange).
+
 ## Copyright and License
 
 Licensed under the GNU GPL v3, see [LICENSE](./LICENSE) for full text of license.
 
-Copyright (C) 2014-2015 Rudolf Olah <omouse@gmail.com>
+Copyright (C) 2014-2016 Rudolf Olah <omouse@gmail.com>
