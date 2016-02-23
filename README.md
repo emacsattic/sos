@@ -41,6 +41,13 @@ There's an alternative to sos-mode floating out there: [sx.el](https://github.co
 
 Someone has created a command-line tool for viewing StackOverflow questions: [how2](https://github.com/santinic/how2). It's written in Node.js which is okay but what a strange choice for a command-line tool. It also has modal windows within the terminal which is strange. It includes a [StackExchange API for Node.js](https://github.com/santinic/how2/tree/master/lib/stackexchange).
 
+List of alternatives:
+
+* [sx.el](https://github.com/vermiculus/sx.el/)
+* [how2](https://github.com/santinic/how2)
+* [wat](https://github.com/dthree/wat)
+* [howdoi](https://github.com/gleitz/howdoi)
+
 ## Copyright and License
 
 Licensed under the GNU GPL v3, see [LICENSE](./LICENSE) for full text of license.
