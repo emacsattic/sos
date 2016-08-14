@@ -1,6 +1,7 @@
 # emacs-sos
 
 [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
+[![Flattr This](http://button.flattr.com/flattr-badge-large.png)](https://flattr.com/submit/auto?fid=y0jx3j&url=https%3A%2F%2Fgithub.com%2Fomouse%2Femacs-sos)
 
 StackOverflow Search (SOS) mode for Emacs.
 
